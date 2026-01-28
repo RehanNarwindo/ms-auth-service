@@ -1,6 +1,8 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { RegisterDto } from "./dto/register.dto";
+import { hashPass, comparePass } from './helpers/bcrypt.helper';
 import { LoginDto } from "./dto/login.dto";
+import { generateAccessToken } from "./helpers/jwt.helper";
 
 @Injectable()
 export class AuthService {
@@ -27,7 +29,7 @@ export class AuthService {
     }
 
     // Here you would hash the password
-    const hashedPassword = await this.hashPassword(registerDto.password);
+    const hashedPassword = await hashPass(registerDto.password);
 
     const user = {
       id: Date.now().toString(),
@@ -40,7 +42,11 @@ export class AuthService {
     this.users.set(registerDto.email, user);
 
     // Generate tokens
-    const tokens = this.generateTokens(user);
+    const tokens = generateAccessToken({
+          sub: user.id,
+          email: user.email,
+        });
+
 
     return {
       user: {
@@ -61,14 +67,16 @@ export class AuthService {
     }
 
     // Here you would verify the password
-    const isValidPassword = await this.verifyPassword(loginDto.password, user.password);
+    const isValidPassword = await comparePass(loginDto.password, user.password);
     
     if (!isValidPassword) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const tokens = this.generateTokens(user);
-
+const tokens = generateAccessToken({
+  sub: user.id,
+  email: user.email,
+});
     return {
       user: {
         id: user.id,
@@ -96,42 +104,17 @@ export class AuthService {
     }
 
     // Generate new access token
-    const accessToken = this.generateAccessToken(user);
+      const tokens = generateAccessToken({
+      sub: user.id,
+      email: user.email,
+    });
 
-    return { accessToken };
+    return { tokens };
   }
 
   async logout(refreshToken: string) {
     this.refreshTokens.delete(refreshToken);
     return true;
-  }
-
-  // Helper methods
-  private async hashPassword(password: string): Promise<string> {
-    // In production, use bcrypt
-    return `hashed_${password}`;
-  }
-
-  private async verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-    // In production, use bcrypt.compare
-    return `hashed_${password}` === hashedPassword;
-  }
-
-  private generateTokens(user: any) {
-    const accessToken = `access_${user.id}_${Date.now()}`;
-    const refreshToken = `refresh_${user.id}_${Date.now()}`;
-    
-    this.refreshTokens.set(refreshToken, user.id);
-
-    return {
-      accessToken,
-      refreshToken,
-      expiresIn: 3600 // 1 hour in seconds
-    };
-  }
-
-  private generateAccessToken(user: any) {
-    return `access_${user.id}_${Date.now()}`;
   }
 
   // For testing

@@ -48,6 +48,8 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     try {
       const result = await this.authService.login(loginDto);
+      console.log(result, "hasil result");
+      
       return {
         success: true,
         message: 'Login successful',
