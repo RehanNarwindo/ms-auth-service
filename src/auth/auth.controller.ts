@@ -11,8 +11,6 @@ export class AuthController {
   @Get('profile')
   @HttpCode(HttpStatus.OK)
   async getProfile() {
-    // Note: This will be protected with JWT guard
-    // For now, return placeholder
     return {
       success: true,
       message: 'Profile endpoint',
