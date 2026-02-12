@@ -1,7 +1,8 @@
 {
-    "emmet.excludeLanguages": ["markdown", "php"],
+
+    "emmet.excludeLanguages": ["markdown", "typescript"],
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "[php]": {
+    "[typescript]": {
         "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
     },
     "workbench.editor.empty.hint": "hidden",
