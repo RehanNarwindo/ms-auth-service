@@ -1,8 +1,12 @@
-import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { RegisterDto } from "./dto/register.dto";
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { RegisterDto } from './dto/register.dto';
 import { hashPass, comparePass } from './helpers/bcrypt.helper';
-import { LoginDto } from "./dto/login.dto";
-import { generateAccessToken } from "./helpers/jwt.helper";
+import { LoginDto } from './dto/login.dto';
+import { generateAccessToken } from './helpers/jwt.helper';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +22,7 @@ export class AuthService {
       password: '$2b$10$YourHashedPasswordHere', // password: password123
       firstName: 'Test',
       lastName: 'User',
-      createdAt: new Date()
+      createdAt: new Date(),
     });
   }
 
@@ -36,75 +40,74 @@ export class AuthService {
       ...registerDto,
       password: hashedPassword,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     this.users.set(registerDto.email, user);
 
     // Generate tokens
     const tokens = generateAccessToken({
-          sub: user.id,
-          email: user.email,
-        });
-
+      sub: user.id,
+      email: user.email,
+    });
 
     return {
       user: {
         id: user.id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
       },
-      tokens
+      tokens,
     };
   }
 
   async login(loginDto: LoginDto) {
     const user = this.users.get(loginDto.email);
-    
+
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     // Here you would verify the password
     const isValidPassword = await comparePass(loginDto.password, user.password);
-    
+
     if (!isValidPassword) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-const tokens = generateAccessToken({
-  sub: user.id,
-  email: user.email,
-});
+    const tokens = generateAccessToken({
+      sub: user.id,
+      email: user.email,
+    });
     return {
       user: {
         id: user.id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
       },
-      tokens
+      tokens,
     };
   }
 
   async refreshToken(refreshToken: string) {
     // Verify refresh token
     const userId = this.refreshTokens.get(refreshToken);
-    
+
     if (!userId) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
     // Find user
-    const user = Array.from(this.users.values()).find(u => u.id === userId);
-    
+    const user = Array.from(this.users.values()).find((u) => u.id === userId);
+
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
 
     // Generate new access token
-      const tokens = generateAccessToken({
+    const tokens = generateAccessToken({
       sub: user.id,
       email: user.email,
     });

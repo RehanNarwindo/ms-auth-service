@@ -7,10 +7,13 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './auth/database/config/database.configuration';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-      isGlobal: true, 
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
       load: [configuration],
-  }), AuthModule],
+    }),
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

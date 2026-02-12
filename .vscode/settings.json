@@ -1,9 +1,9 @@
 {
-
     "emmet.excludeLanguages": ["markdown", "typescript"],
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[typescript]": {
-        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
     },
     "workbench.editor.empty.hint": "hidden",
     "workbench.iconTheme": "material-icon-theme",
