@@ -29,5 +29,22 @@
   "gitlens.ai.model": "vscode",
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "terminal.integrated.suggest.inlineSuggestion": "off",
-  "workbench.colorTheme": "Atom One Dark"
+  "workbench.colorTheme": "Atom One Dark",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.run": "onType",
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "sonarlint.analyzerProperties": {
+    "sonar.typescript.tsconfigPath": "tsconfig.json"
+  },
+  "dependi.autoInstall": true,
+  "dependi.packageManager": "npm",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "sonarqube",
+    "projectKey": "nest-project"
+  }
 }

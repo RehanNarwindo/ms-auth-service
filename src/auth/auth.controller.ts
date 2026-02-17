@@ -39,7 +39,6 @@ export class AuthController {
         data: result,
       };
     } catch (error) {
-
       if (error instanceof HttpException) {
         throw error;
       }
