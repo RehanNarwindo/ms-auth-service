@@ -1,32 +1,33 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 import { User } from './interfaces/user.interface';
+import { AuthQueries } from './sql/auth.queries';
+import { uuidv7 } from "uuidv7";
 
 @Injectable()
 export class AuthRepository {
   constructor(@Inject('PG_POOL') private readonly db: Pool) {}
 
   async createUser(user: User) {
-    const query = `
-      INSERT INTO users (email, password, first_name, last_name)
-      VALUES ($1, $2, $3, $4)
-      RETURNING *
-    `;
+    const id = uuidv7();
 
-    const values = [user.email, user.password, user.firstName, user.lastName];
-
-    const result = await this.db.query(query, values);
+    const values = [
+      id,
+      user.email,
+      user.password,
+      user.firstName,
+      user.lastName,
+    ];
+    const result = await this.db.query(AuthQueries.create, values);
     return result.rows[0];
   }
   async findByEmail(email: string) {
-    const query = `SELECT * FROM users WHERE email = $1`;
-    const result = await this.db.query(query, [email]);
+    const result = await this.db.query(AuthQueries.findByEmail, [email]);
     return result.rows[0];
   }
 
   async findById(id: string) {
-    const query = `SELECT * FROM users WHERE id = $1`;
-    const result = await this.db.query(query, [id]);
+    const result = await this.db.query(AuthQueries.findById, [id]);
     return result.rows[0];
   }
 
