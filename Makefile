@@ -6,6 +6,9 @@ install:
 run:
 	npm run start:dev
 
+lint:
+	npm run lint
+
 # build project
 build:
 	npm run build

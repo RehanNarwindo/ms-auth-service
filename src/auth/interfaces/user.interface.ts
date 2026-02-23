@@ -7,3 +7,10 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CreateUserPayload {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}

@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
-import { User } from './interfaces/user.interface';
+import { CreateUserPayload } from './interfaces/user.interface';
 import { AuthQueries } from './sql/auth.queries';
-import { uuidv7 } from "uuidv7";
+import { uuidv7 } from 'uuidv7';
 
 @Injectable()
 export class AuthRepository {
   constructor(@Inject('PG_POOL') private readonly db: Pool) {}
 
-  async createUser(user: User) {
+  async createUser(user: CreateUserPayload) {
     const id = uuidv7();
 
     const values = [

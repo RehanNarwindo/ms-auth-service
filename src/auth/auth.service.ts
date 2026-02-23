@@ -27,7 +27,7 @@ export class AuthService {
       password: hashedPassword,
       firstName: registerDto.firstName,
       lastName: registerDto.lastName,
-    } as any);
+    });
 
     const tokens = generateAccessToken({
       sub: user.id,
